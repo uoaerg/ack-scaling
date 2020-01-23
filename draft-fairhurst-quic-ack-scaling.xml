@@ -4,16 +4,15 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced. 
-     An alternate method (rfc include) is described in the references. -->
-
-<!ENTITY RFC1122 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1122.xml">
+     An alternate method (rfc include) is described in the references. --><!ENTITY RFC1122 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1122.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2525 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2525.xml">
 <!ENTITY RFC2760 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2760.xml">
 <!ENTITY RFC2629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
-<!ENTITY RFC5681 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5681.xml">
+<!ENTITY RFC3449 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3449.xml">
 <!ENTITY RFC6928 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6928.xml">
+<!ENTITY RFC5681 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5681.xml">
 <!ENTITY I-D.ietf-quic-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-quic-transport-20.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -42,231 +41,227 @@
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
 <rfc category="info" docName="draft-ietf-xml2rfc-template-05" ipr="trust200902">
-  <!-- category values: std, bcp, info, exp, and historic
+    <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
      they will automatically be output with "(if approved)" -->
-
-  <!-- ***** FRONT MATTER ***** -->
-
-  <front>
-    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+    <!-- ***** FRONT MATTER ***** -->
+    <front>
+        <!-- The abbreviated title is used in the page header - it is only necessary if the 
          full title is longer than 39 characters -->
-
-    <title>QUIC Ack Scaling</title>
-
-    <!-- add 'role="editor"' below for the editors if appropriate -->
-
-    <!-- Another author who claims to be an editor -->
-
-    <author fullname="Godred Fairhurst" initials="G" surname="Fairhurst">
-      <organization>University of Aberdeen</organization>
-
-      <address>
-        <postal>
-          <street>School of Engineering</street>
-
-          <street>Fraser Noble Building</street>
-
-          <city>Aberdeen</city>
-
-          <region></region>
-
-          <code>AB24 3UE</code>
-
-          <country>UK</country>
-        </postal>
-
-        <email>gorry@erg.abdn.ac.uk</email>
-      </address>
-    </author>
-
-    <author fullname="Ana Custura" initials="A" surname="Custura">
-      <organization>University of Aberdeen</organization>
-
-      <address>
-        <postal>
-          <street>School of Engineering</street>
-
-          <street>Fraser Noble Building</street>
-
-          <city>Aberdeen</city>
-
-          <region></region>
-
-          <code>AB24 3UE</code>
-
-          <country>UK</country>
-        </postal>
-
-        <email>ana@erg.abdn.ac.uk</email>
-      </address>
-    </author>
-
-    <author fullname="Tom Jones" initials="T" surname="Jones">
-      <organization>University of Aberdeen</organization>
-
-      <address>
-        <postal>
-          <street>School of Engineering</street>
-
-          <street>Fraser Noble Building</street>
-
-          <city>Aberdeen</city>
-
-          <region></region>
-
-          <code>AB24 3UE</code>
-
-          <country>UK</country>
-        </postal>
-
-        <email>tom@erg.abdn.ac.uk</email>
-      </address>
-    </author>
-
-    <date year="2020" />
-
-    <area>General</area>
-
-    <workgroup>Internet Engineering Task Force</workgroup>
-
-    <!-- WG name at the upperleft corner of the doc,
+        <title>QUIC Ack Scaling</title>
+        <!-- add 'role="editor"' below for the editors if appropriate -->
+        <!-- Another author who claims to be an editor -->
+        <author fullname="Godred Fairhurst" initials="G" surname="Fairhurst">
+            <organization>University of Aberdeen</organization>
+            <address>
+                <postal>
+                    <street>School of Engineering</street>
+                    <street>Fraser Noble Building</street>
+                    <city>Aberdeen</city>
+                    <region/>
+                    <code>AB24 3UE</code>
+                    <country>UK</country>
+                </postal>
+                <email>gorry@erg.abdn.ac.uk</email>
+            </address>
+        </author>
+        <author fullname="Ana Custura" initials="A" surname="Custura">
+            <organization>University of Aberdeen</organization>
+            <address>
+                <postal>
+                    <street>School of Engineering</street>
+                    <street>Fraser Noble Building</street>
+                    <city>Aberdeen</city>
+                    <region/>
+                    <code>AB24 3UE</code>
+                    <country>UK</country>
+                </postal>
+                <email>ana@erg.abdn.ac.uk</email>
+            </address>
+        </author>
+        <author fullname="Tom Jones" initials="T" surname="Jones">
+            <organization>University of Aberdeen</organization>
+            <address>
+                <postal>
+                    <street>School of Engineering</street>
+                    <street>Fraser Noble Building</street>
+                    <city>Aberdeen</city>
+                    <region/>
+                    <code>AB24 3UE</code>
+                    <country>UK</country>
+                </postal>
+                <email>tom@erg.abdn.ac.uk</email>
+            </address>
+        </author>
+        <date year="2020"/>
+        <area>General</area>
+        <workgroup>Internet Engineering Task Force</workgroup>
+        <!-- WG name at the upperleft corner of the doc,
          IETF is fine for individual submissions.  
          If this element is not present, the default is "Network Working Group",
          which is used by the RFC Editor as a nod to the history of the IETF. -->
-
-    <keyword>ACK QUIC</keyword>
-
-    <abstract>
-        <t> On network links where the return capacity is much less than the
+        <keyword>ACK QUIC</keyword>
+        <abstract>
+            <t> On network links where the return capacity is much less than the
         forward capacity, acknowledgments of data receipt can reduce the
         efficient use of link capacity. Reducing the ratio of acknowledgements
         to data can help to improve link utilization.  This document describes
-        a modification to how frequently the QUIC transport protocol <xref
-        target="I-D.ietf-quic-transport"></xref> acknowledges the receipt of
+        a modification to how frequently the QUIC transport protocol <xref target="I-D.ietf-quic-transport"/> acknowledges the receipt of
         data.</t>
-    </abstract>
-  </front>
-
-  <middle>
-    <section title="Introduction">
-
-        <t> This document proposes increasing the ratio of ACK packets to data
-        packets from 2:1 to 10:1 for QUIC flows once the flow has exited slow
-        start. The increase in ACK ratio is proposed to not be more aggressive
-        than the TCP Initial Window (IW) suggested by RFC6928 <xref
-        target="RFC6928"></xref>. The change in ACK ratio is proposed to
-        improve return link efficiency on paths with highly asymmetric
-        capacities.
+        </abstract>
+    </front>
+    <middle>
+        <section title="Introduction">
+            <t>
+	This document proposes increasing the ratio of ACK packets to data packets from
+	2:1 to 10:1 for QUIC flows once the flow has exited slow start. The increase in
+	ACK ratio is proposed to not be more aggressive than the TCP Initial Window
+	(IW) suggested by <xref target="RFC6928">RFC&nbsp;5618</xref>. The change in
+	ACK ratio is proposed to improve return link efficiency on paths with
+	asymmetric characteristics.
         </t>
-
-        <t><xref target="RFC5681">RFC&nbsp;5681</xref> clarifies the ACKing
-        frequency described in <xref target="RFC1122">RFC&nbsp;1122</xref> to
-        say that TCP implementations should ACK every second data segment when
-        there is a steady stream of data. Sending fewer than 1 ACK for each
-        data segment is called using an ACK delay. ACK delays helps to reduce
-        return traffic and can increase network efficiency. However, if a
-        sender does not send an ACK for every second segment a stretch ACK
-        violation might occur.  RFC2525 <xref target="RFC2525"></xref>
-        describes the significance of stretch ACK violations: </t>
-
-        <t>"TCP receivers exhibiting this behavior will cause TCP senders to
-        generate burstier traffic, which can degrade performance in
-        congested environments.  In addition, generating fewer ACKs
-        increases the amount of time needed by the slow start algorithm to
-        open the congestion window to an appropriate point, which
-        diminishes performance in environments with large bandwidth-delay
-        products.  Finally, generating fewer ACKs may cause needless
-        retransmission timeouts in lossy environments, as it increases the
-        possibility that an entire window of ACKs is lost, forcing a
-        retransmission timeout."</t>
-  
-        <t> Any ACKing scheme that increases the ACK ratio beyond 2 needs to
-        compensate for these possible issues.</t>
-
-        <t> When network links have highly asymmetric capacities (such as in
-        Cellular, DOCSYS cable or satellite networks) a high proportion of the
-        opportunities to send might be used for purely ACK traffic. </t>
-
-        <t> This document suggests a modification to the ACK ratio for steady
-        data streams and provides the considerations required to implement a
-        higher ACK ratio safely.  </t>
-
-        <section title="Implications of Return Path Asymmetry">
-
-            <t>The TCP Performance Implications RFC <xref
-            target="RFC3449"></xref> describes a series of problems and
-            mitigations from using an asymmetric path.  Performance problems
-            arise in several access networks, including bandwidth-asymmetric
-            networks (such as broadband satellite access, DOCSIS cable
-            networks, cellular mobile, etc), where a limited ACK rate results
-            in constraining the throughput on both forward and return paths.
-            This is a significant factor for paths with a capacity asymmetry
-            greater than approx 1:40 (one ACK per TCP Segment).</t>
-
-            <t>Where the ACK rate is limited by the capacity of the return path
-            this motivates the need to scale the ACK rate, or increase the
-            number of segments/packets that are acknowledged by each ACK
-            packet.  Historically, "stretch ACKs" (an ACK that covers multiple
-            received segments) have been considered to be an undesirable
-            network pathology, because they can result in bursts of
-            transmission. The use of ACK Thinning (deleting some TCP ACKs
-            within a PEP device,) will lead to reception of Stretch ACKs (that
-            cover more than one TCP MSS of data).  An alternative is to either
-            compress the ACKs on the radio segment or to reconstruct the ACK
-            stream in a PEP after the radio segment.</t>
-
-            <t>Capacity is not the only asymmetric path constraint.  In some
-            network technologies (e.g., return link RRM allocation in a
-            satellite BoD system, or an LTE scheduler in mobile) the
-            transmission of ACKs across a network segment can also consume
-            significant resource and therefore the cost to the user/operator of
-            the network segment. This provides an incentive to reduce rate (or
-            volume) of ACK traffic.</t>
-
-            <t>Reducing the rate of ACKs can also benefit wired scenarios by
-            reducing the computational effort required to process ACKs and the
-            rate of cache ejection for Generic Receiver Offload (GRO), both
-            important in optimising network interfaces for high speed
-            networks.</t>
         </section>
-
-      <section title="Requirements Language">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        <section title="Requirements Language">
+            <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-        document are to be interpreted as described in <xref
-        target="RFC2119">RFC 2119</xref>.</t>
-      </section>
-    </section>
-
-    <section anchor="ackcc" title="ACK Congestion Control">
-    </section>
-
-    <section anchor="ackratios" title="Selecting an ACK Ratio">
-    
-    <t>
-    Why 10?
-    IW  10
-
-    <xref target="RFC6928"></xref>
-    </t>
-
-    </section>
-
-    <section anchor="IANA" title="IANA Considerations">
-      <t>This memo includes no request to IANA.</t>
-    </section>
-
-    <section anchor="Security" title="Security Considerations">
-      <t>All drafts are required to have a security considerations section.
+        document are to be interpreted as described in <xref target="RFC2119">RFC 2119</xref>.</t>
+        </section>
+        <section title="Motivation">
+            <t>
+	When the characteristics of the forward and return paths are not symmetric, the
+	transmission of ACKs can adversely impact either transport performance or the
+	cost of using the network.
+	</t>
+            <section title="ACK ratio impact on asymmetric paths">
+                <t>
+		The TCP Performance Implications RFC~\cite{RFC3449} describes a series of
+		problems and mitigations from using an asymmetric path.  Performance problems
+		arise in several access networks, including bandwidth-asymmetric networks (such
+		as broadband satellite access, DOCSIS cable networks, cellular mobile, etc),
+		where a limited ACK rate results in constraining the throughput on both forward
+		and return paths.
+		</t>
+                <t>
+		Where the ACK rate is limited by the capacity of the return path this motivates
+		the need to scale the ACK rate, or increase the number of segments/packets that
+		are acknowledged by each ACK packet.
+		Capacity is not the only asymmetric path constraint.  In some network
+		technologies (e.g., return link RRM allocation in a satellite BoD system, or an
+		LTE scheduler in mobile) the transmission of ACKs across a network segment can
+		also consume significant resource and therefore the cost to the user/operator
+		of the network segment. This also provides an incentive to reduce rate (or volume)
+		of ACK traffic.
+		</t>
+                <t>
+		Reducing the rate of ACKs can also benefit wired scenarios by reducing the
+		computational effort required to process ACKs and the rate of cache ejection
+		for Generic Receiver Offload (GRO), both important in optimising network
+		interfaces for high speed networks.
+		</t>
+            </section>
+            <section title="ACK ratio modifications in other transports">
+                <t>
+		Various ways have been proposed to modify the ACK ratio for TCP. On satellite networks,
+		PEPs can implement functions that "Thin" TCP ACKs when they detect/know the
+		upstream is filled with TCP ACK stream(s). There are examples of many link
+		technologies (e.g., DOCSIS, LTE, Satellite) that use some form of ACK Thinning.
+		These methods only work when the ACKs can be observed by a device in the
+		network, such as a PEP, and hence can not work with encrypted transports such
+		as QUIC.
+		</t>
+                <t>
+		Other transports, such as DCCP, described in RFC4340, use methods to control
+		the ACK ratio at the receiver. DCCP specifies a TCP-friendly congestion control
+		\cite{rfc4341}, which includes the ability to use signaling to allow the sender
+		to adjust the receiver ACK ratio within certain parameters.
+		However, this method does not have any way to detect and account for the cost
+		of  ACK transmission or adapt to delays introduced by the path and provides
+		only a partial mitigation to the impacts of asymmetric paths when sending ACKs.
+		</t>
+                <t>
+		ACK-CC\cite{rfc5690} is an Informational specification that proposed a method
+		to control the rate of ACKs to avoid the return path from becoming
+		congested (i.e., targeting the case where the path has asymmetric available
+		capacity) but this did not achieve wide-scale deployment.
+		</t>
+            </section>
+        </section>
+        <section title="Proposed ACK ratio">
+            <section title="Considerations">
+                <t><xref target="RFC5681">RFC&nbsp;5681</xref> clarifies the ACKing
+	        frequency described in <xref target="RFC1122">RFC&nbsp;1122</xref> to
+	        say that TCP implementations should ACK every second data segment when
+	        there is a steady stream of data. Sending fewer than 1 ACK for each
+	        data segment is called using an ACK delay. ACK delays helps to reduce
+	        return traffic and can increase network efficiency. However, if a
+	        sender does not send an ACK for every second segment a stretch ACK
+	        violation might occur.  RFC2525 <xref target="RFC2525"/>
+	        describes the significance of stretch ACK violations: </t>
+                <t>"TCP receivers exhibiting this behavior will cause TCP senders to
+	        generate burstier traffic, which can degrade performance in
+	        congested environments.  In addition, generating fewer ACKs
+	        increases the amount of time needed by the slow start algorithm to
+	        open the congestion window to an appropriate point, which
+	        diminishes performance in environments with large bandwidth-delay
+	        products.  Finally, generating fewer ACKs may cause needless
+	        retransmission timeouts in lossy environments, as it increases the
+	        possibility that an entire window of ACKs is lost, forcing a
+	        retransmission timeout."</t>
+                <t> Any ACKing scheme that increases the ACK ratio beyond 2 needs to
+	        compensate for these possible issues.</t>
+            </section>
+            <section title="Selecting an ACK ratio">
+                <t> This document suggests a modification to the ACK ratio for steady
+	        data streams and provides the considerations required to implement a
+	        higher ACK ratio safely.  </t>
+                <t>
+		We used an experimental approach to change QUIC`s ACK Policy from the default
+		ratio of 1:2 to 1:10.  Existing design decisions for QUIC allow an IW of 10,
+		which is considered a safe number of packets to burst into a network in unknown
+		conditions. An ACK ratio of 1:10 is not significantly different than permitting
+		an IW of 10. Our tests show that this is safe to use and does not negatively
+		impact congestion control, while reducing the amount of IP, UDP and ACK
+		overhead by a factor of 5. Unlike TCP, QUIC sends other types of data frames in
+		addition to ack frames, increasing the overhead on return paths. On highly
+		asymmetrical links a ratio of 10 may mitigate the issue and reduce the ACK
+		traffic enough to take advantage of the forward link capacity.
+		The following table presents some asymmetry scenarios and highlights where this could be an issue.
+		TABLE
+		</t>
+                <t>
+		Our initial tests show the total number of bytes is reduced 4 times when using
+		an ACK ratio of 1:10, without any increase in loss, on a high-latency link with
+		an asymmetry of 5:1.  The following table presents the results for two
+		implementations tested with different ack ratios.
+		
+		TABLE
+		These results have been confirmed by a widely used QUIC implementation, which
+		uses its own ack ratio heuristics.  Although the QUIC specification recommends
+		sending an ACK for every other received packet, the currently used algorithm in
+		Chromium QUIC is min(max\_ack\_delay, 1/4 * min\_rtt) or 10
+		packets.
+		Their choice of 1:10 was based also on experiments, and agrees with our
+		analysis presented earlier. We understand that google also evaluated 1:20, but
+		in their tested scenarios this did not offer an overall benefit.
+		</t>
+                <t>
+                    <xref target="RFC6928"/>
+                </t>
+            </section>
+            <section anchor="ackcc" title="ACK Congestion Control">
+	</section>
+        </section>
+        <section anchor="IANA" title="IANA Considerations">
+            <t>This memo includes no request to IANA.</t>
+        </section>
+        <section anchor="Security" title="Security Considerations">
+            <t>All drafts are required to have a security considerations section.
       See <xref target="RFC3552">RFC 3552</xref> for a guide.</t>
-    </section>
-  </middle>
-
-  <back>
-    <references title="Normative References">
-      <!--?rfc include="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+        </section>
+    </middle>
+    <back>
+        <references title="Normative References"><!--?rfc include="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
 
       &RFC1122;
 
@@ -279,9 +274,7 @@
       &I-D.ietf-quic-transport;
 
     </references>
-
-    <references title="Informative References">
-      <!-- Here we use entities that we defined at the beginning. -->
+        <references title="Informative References"><!-- Here we use entities that we defined at the beginning. -->
 
       &RFC2629;
 
@@ -289,7 +282,10 @@
 
       &RFC2525;
 
-    </references>
+      &RFC3449;
 
-  </back>
+      &RFC6928;
+
+    </references>
+    </back>
 </rfc>
