@@ -227,17 +227,69 @@
 		asymmetrical links a ratio of 10 may mitigate the issue and reduce the ACK
 		traffic enough to take advantage of the forward link capacity.
 		The following table presents some asymmetry scenarios and highlights where this could be an issue.
-		TABLE
+The columns present the rate of ACK traffic required (in kbps) to fill the each of the paths.
+The table shows the results for TCP (without PEP), both for lossless communication, and the
+period after loss when ACKs communicate the loss information. It also shows the impact of
+using the proposed ACK ratio of 1:10 with QUIC. This reduces the utilisation of the return path.
+Cases where the ACK Rate exceeds the return link capacity for the scenario are marked with a star.
+
+     		<figure anchor="fig-projected" title="Rate of ACK traffic required to fill the forward path in different loss and asymmetry scenarios">
+               	 <artwork align="center"><![CDATA[
++----------------------+------------------+-------------------+--------------------+
+|                      |    10/2 Mbps     |    50/10 Mbps     |     250/3 Mbps     |
++----------------------+------------------+-------------------+--------------------+
+| TCP no loss          | 133 - 346        | 650 -1,730        | 3250 - 8,650*      |
+| TCP loss             | 346 - 560        | 1,730 - 2,800     | 8,650 - 14,000*    |
+| QUIC 1:2 AR no loss  | 144 - 438        | 720 - 2,190       | 3,600 - 10,950*    |
+| QUIC 1:2 AR loss     | 290 - Unlimited* | 1450 - Unlimited* | 7,250 - Unlimited* |
+| QUIC 1:10 AR no loss | 28.8 - 87.6      | 144 - 438         | 720 - 2,190        |
++----------------------+------------------+-------------------+--------------------+
+                ]]></artwork>
+            </figure>
+
 		</t>
                 <t>
-		Our initial tests show the total number of bytes is reduced 4 times when using
+		Our initial tests show the total number of bytes and packets is reduced 4 times when using
 		an ACK ratio of 1:10, without any increase in loss, on a high-latency link with
-		an asymmetry of 5:1.  The following table presents the results for two
-		implementations tested with different ack ratios.
-		
-		TABLE
-		These results have been confirmed by a widely used QUIC implementation, which
-		uses its own ack ratio heuristics.  Although the QUIC specification recommends
+		an asymmetry of 5:1. The following table presents the numbers of packets sent by two QUIC
+		implementations using the default and proposed ACK ratios. We see between a four and five time reduction
+		in the number of packets sent.
+		</t>
+
+     		<figure anchor="fig-packets" title="Number of packets sent and received during a 100MB QUIC transfer using different ACK ratios, for two implementations">
+               	 <artwork align="center"><![CDATA[
++----------------------------------+----------------+----------------+
+|                                  |   Chromium     |     Quicly     |
++----------------------------------+----------------+----------------+
+| Packets sent                     | 77,419         | 83,238         |
+| Packets on return path (1:2 AR)  | 39,089 (50.4%) | 41,108 (49.3%) |
+| Packets on return path (1:10 AR) | 10,409 (13.4%) | 9650 (11.5%)   |
++----------------------------------+----------------+----------------+
+                ]]></artwork>
+            </figure>
+		<t>
+		The following table presents the number of bytes sent by a QUIC implementation
+		using the default and proposed ACK ratios. We see a reduction in in the number of
+		bytes on the return path from 2.7 to 0.7% of the total bytes sent. This number is
+		sufficient to allow the path to take full advantage of the forward rate.
+		</t>
+
+     		<figure anchor="fig-bytes" title="Number of bytes sent and received during a 100MB Chromium QUIC transfer using different ACK ratios">
+               	 <artwork align="center"><![CDATA[
++-------------------------------------------+----------------+
+|                                           |    Chromium    |
++-------------------------------------------+----------------+
+| Bytes sent                                | 110M           |
+| Bytes on return path (default policy)     | 3,056KB (2.7%) |
+| Bytes on return path (decimation policy)  | 810KB (0.7%)   |
++-------------------------------------------+----------------+
+                ]]></artwork>
+            </figure>
+
+
+		<t>
+		The presented results have been confirmed by Google, who use
+		their own ACK ratio heuristics.  Although the QUIC specification recommends
 		sending an ACK for every other received packet, the currently used algorithm in
 		Chromium QUIC is min(max\_ack\_delay, 1/4 * min\_rtt) or 10
 		packets.
@@ -249,8 +301,6 @@
                     <xref target="RFC6928"/>
                 </t>
             </section>
-            <section anchor="ackcc" title="ACK Congestion Control">
-	</section>
         </section>
         <section anchor="IANA" title="IANA Considerations">
             <t>This memo includes no request to IANA.</t>
