@@ -7,12 +7,13 @@
      An alternate method (rfc include) is described in the references. --><!ENTITY RFC1122 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1122.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2525 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2525.xml">
-<!ENTITY RFC2760 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2760.xml">
-<!ENTITY RFC2629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
-<!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY RFC3449 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3449.xml">
-<!ENTITY RFC6928 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6928.xml">
+<!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
+<!ENTITY RFC4340 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4340.xml">
+<!ENTITY RFC4341 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4341.xml">
 <!ENTITY RFC5681 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5681.xml">
+<!ENTITY RFC5690 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5690.xml">
+<!ENTITY RFC6928 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6928.xml">
 <!ENTITY I-D.ietf-quic-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-quic-transport-20.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -117,7 +118,7 @@
 	This document proposes increasing the ratio of ACK packets to data packets from
 	2:1 to 10:1 for QUIC flows once the flow has exited slow start. The increase in
 	ACK ratio is proposed to not be more aggressive than the TCP Initial Window
-	(IW) suggested by <xref target="RFC6928">RFC&nbsp;5618</xref>. The change in
+	(IW) suggested by <xref target="RFC6928">RFC&nbsp;6928</xref>. The change in
 	ACK ratio is proposed to improve return link efficiency on paths with
 	asymmetric characteristics.
         </t>
@@ -135,103 +136,118 @@
 	</t>
             <section title="ACK ratio impact on asymmetric paths">
                 <t>
-		The TCP Performance Implications RFC~\cite{RFC3449} describes a series of
-		problems and mitigations from using an asymmetric path.  Performance problems
-		arise in several access networks, including bandwidth-asymmetric networks (such
-		as broadband satellite access, DOCSIS cable networks, cellular mobile, etc),
-		where a limited ACK rate results in constraining the throughput on both forward
-		and return paths.
+		TCP Performance Implications <xref target="RFC3449"></xref>
+		describes a series of problems and mitigations from using an
+		asymmetric path.  Performance problems arise in several access
+		networks, including bandwidth-asymmetric networks (such as
+		broadband satellite access, DOCSIS cable networks, cellular
+		mobile, etc), where a limited ACK rate results in constraining
+		the throughput on both forward and return paths.
 		</t>
-                <t>
-		Where the ACK rate is limited by the capacity of the return path this motivates
-		the need to scale the ACK rate, or increase the number of segments/packets that
-		are acknowledged by each ACK packet.
-		Capacity is not the only asymmetric path constraint.  In some network
-		technologies (e.g., return link RRM allocation in a satellite BoD system, or an
-		LTE scheduler in mobile) the transmission of ACKs across a network segment can
-		also consume significant resource and therefore the cost to the user/operator
-		of the network segment. This also provides an incentive to reduce rate (or volume)
-		of ACK traffic.
-		</t>
-                <t>
-		Reducing the rate of ACKs can also benefit wired scenarios by reducing the
-		computational effort required to process ACKs and the rate of cache ejection
-		for Generic Receiver Offload (GRO), both important in optimising network
-		interfaces for high speed networks.
-		</t>
+
+		<t> Where the ACK rate is limited by the capacity of the return
+		path this motivates the need to change the ACK rate (increase
+		the number of segments/packets that are acknowledged by each
+		ACK packet).  </t>
+
+		<t>Capacity is not the only asymmetric path constraint.  In
+		some network technologies (e.g., return link RRM allocation in
+		a satellite BoD system, or an LTE scheduler in mobile) the
+		sending of ACKs across a network segment can also consume
+		significant transmission resource and increase the cost to the
+		user/operator of the network segment. This also provides an
+		incentive to reduce rate (or volume) of ACK traffic.  </t>
+		
+		<t> Reducing the rate of ACKs can benefit all networks
+		by reducing the computational effort required to process ACKs
+		and the rate of cache ejection for Generic Receiver Offload
+		(GRO), both important in optimising network interfaces for high
+		speed networks.</t>
             </section>
+
             <section title="ACK ratio modifications in other transports">
-                <t>
-		Various ways have been proposed to modify the ACK ratio for TCP. On satellite networks,
-		PEPs can implement functions that "Thin" TCP ACKs when they detect/know the
-		upstream is filled with TCP ACK stream(s). There are examples of many link
-		technologies (e.g., DOCSIS, LTE, Satellite) that use some form of ACK Thinning.
-		These methods only work when the ACKs can be observed by a device in the
-		network, such as a PEP, and hence can not work with encrypted transports such
-		as QUIC.
-		</t>
-                <t>
-		Other transports, such as DCCP, described in RFC4340, use methods to control
-		the ACK ratio at the receiver. DCCP specifies a TCP-friendly congestion control
-		\cite{rfc4341}, which includes the ability to use signaling to allow the sender
-		to adjust the receiver ACK ratio within certain parameters.
-		However, this method does not have any way to detect and account for the cost
-		of  ACK transmission or adapt to delays introduced by the path and provides
-		only a partial mitigation to the impacts of asymmetric paths when sending ACKs.
-		</t>
-                <t>
-		ACK-CC\cite{rfc5690} is an Informational specification that proposed a method
-		to control the rate of ACKs to avoid the return path from becoming
-		congested (i.e., targeting the case where the path has asymmetric available
-		capacity) but this did not achieve wide-scale deployment.
-		</t>
+		<t> Various methods have been proposed to modify the ACK ratio
+		for TCP. On satellite networks, Performance Enhancing Proxies
+		(PEPs) implement functions that "Thin" TCP ACKs when they
+		detect/know the upstream is filled with TCP ACK stream(s).
+		There are examples of many link technologies (e.g., DOCSIS,
+		LTE, Satellite) that use some form of ACK Thinning.  These
+		methods only work when the ACKs can be observed by a device in
+		the network and cannot work with encrypted transports such as
+		QUIC.</t>
+
+		<t> The Datagram Congestion Control Protocol (DCCP) <xref
+		target="RFC4340"></xref> has methods to control the ACK ratio
+		at the receiver. DCCP specifies a TCP-friendly congestion
+		control <xref target="RFC4341"></xref>, which includes the
+		ability to use signaling to allow the sender to adjust the
+		receiver ACK ratio within certain parameters.  However, this
+		method does not have any way to detect and account for the cost
+		of ACK transmission or adapt to delays introduced by the path
+		and provides only a partial mitigation to the impacts of
+		asymmetric paths when sending ACKs.  </t>
+
+		<t> ACK-CC <xref target="RFC5690"></xref> proposed a method to
+		control the rate of ACKs to avoid the return path from becoming
+		congested (i.e., targeting the case where the path has
+		asymmetric available capacity) but this did not achieve
+		wide-scale deployment.</t>
             </section>
         </section>
         <section title="Proposed ACK ratio">
             <section title="Considerations">
-                <t><xref target="RFC5681">RFC&nbsp;5681</xref> clarifies the ACKing
-	        frequency described in <xref target="RFC1122">RFC&nbsp;1122</xref> to
-	        say that TCP implementations should ACK every second data segment when
-	        there is a steady stream of data. Sending fewer than 1 ACK for each
-	        data segment is called using an ACK delay. ACK delays helps to reduce
-	        return traffic and can increase network efficiency. However, if a
-	        sender does not send an ACK for every second segment a stretch ACK
-	        violation might occur.  RFC2525 <xref target="RFC2525"/>
-	        describes the significance of stretch ACK violations: </t>
-                <t>"TCP receivers exhibiting this behavior will cause TCP senders to
-	        generate burstier traffic, which can degrade performance in
-	        congested environments.  In addition, generating fewer ACKs
-	        increases the amount of time needed by the slow start algorithm to
-	        open the congestion window to an appropriate point, which
-	        diminishes performance in environments with large bandwidth-delay
-	        products.  Finally, generating fewer ACKs may cause needless
-	        retransmission timeouts in lossy environments, as it increases the
-	        possibility that an entire window of ACKs is lost, forcing a
-	        retransmission timeout."</t>
-                <t> Any ACKing scheme that increases the ACK ratio beyond 2 needs to
-	        compensate for these possible issues.</t>
+		<t><xref target="RFC5681">RFC&nbsp;5681</xref> clarifies the
+		ACKing frequency described in <xref
+		target="RFC1122">RFC&nbsp;1122</xref> to say that TCP
+		implementations should ACK every second data segment when there
+		is a steady stream of data. Sending fewer than 1 ACK for each
+		data segment is called using an ACK delay. ACK delays helps to
+		reduce return traffic and can increase network efficiency.
+		However, if a sender does not send an ACK for every second
+		segment a stretch ACK violation might occur.  RFC2525 <xref
+		target="RFC2525"/> describes the significance of stretch ACK
+		violations: </t>
+
+		<t>"TCP receivers exhibiting this behavior will cause TCP
+		senders to generate burstier traffic, which can degrade
+		performance in congested environments.  In addition, generating
+		fewer ACKs increases the amount of time needed by the slow
+		start algorithm to open the congestion window to an appropriate
+		point, which diminishes performance in environments with large
+		bandwidth-delay products.  Finally, generating fewer ACKs may
+		cause needless retransmission timeouts in lossy environments,
+		as it increases the possibility that an entire window of ACKs
+		is lost, forcing a retransmission timeout."</t>
+
+		<t> Any ACKing scheme that increases the ACK ratio beyond 2
+		needs to compensate for these possible issues.</t>
             </section>
             <section title="Selecting an ACK ratio">
-                <t> This document suggests a modification to the ACK ratio for steady
-	        data streams and provides the considerations required to implement a
-	        higher ACK ratio safely.  </t>
-                <t>
-		We used an experimental approach to change QUIC`s ACK Policy from the default
-		ratio of 1:2 to 1:10.  Existing design decisions for QUIC allow an IW of 10,
-		which is considered a safe number of packets to burst into a network in unknown
-		conditions. An ACK ratio of 1:10 is not significantly different than permitting
-		an IW of 10. Our tests show that this is safe to use and does not negatively
-		impact congestion control, while reducing the amount of IP, UDP and ACK
-		overhead by a factor of 5. Unlike TCP, QUIC sends other types of data frames in
-		addition to ack frames, increasing the overhead on return paths. On highly
-		asymmetrical links a ratio of 10 may mitigate the issue and reduce the ACK
-		traffic enough to take advantage of the forward link capacity.
-		The following table presents some asymmetry scenarios and highlights where this could be an issue.
-The columns present the rate of ACK traffic required (in kbps) to fill the each of the paths.
-The table shows the results for TCP (without PEP), both for lossless communication, and the
-period after loss when ACKs communicate the loss information. It also shows the impact of
-using the proposed ACK ratio of 1:10 with QUIC. This reduces the utilisation of the return path.
-Cases where the ACK Rate exceeds the return link capacity for the scenario are marked with a star.
+		<t> We used an experimental approach to change QUIC's ACK XXX
+		reference white paper XXX Policy from the default ratio of 1:2
+		to 1:10.  Existing design decisions for QUIC allow an IW of 10,
+		which is considered a safe number of packets to burst into a
+		network in unknown conditions. An ACK ratio of 1:10 is not
+		significantly different than permitting an IW of 10. Our tests
+		show that this is safe to use and does not negatively impact
+		congestion control, while reducing the amount of IP, UDP and
+		ACK overhead by a factor of 5. Unlike TCP, QUIC sends other
+		types of data frames in addition to ack frames, increasing the
+		overhead on return paths. On highly asymmetrical links a ratio
+		of 10 may mitigate the issue and reduce the ACK traffic enough
+		to take advantage of the forward link capacity.</t>
+
+		<t> <xref target="fig-projected"></xref> presents a table with
+		asymmetry scenarios and highlights where this could be an
+		issue.  The columns present the rate of ACK traffic required
+		(in kbps) to fill the each of the paths.  The table shows the
+		results for TCP (without a PEP), both for lossless
+		communication, and the period after loss when ACKs communicate
+		the loss information. It also shows the impact of using the
+		proposed ACK ratio of 1:10 with QUIC. This reduces the
+		utilisation of the return path.  Cases where the ACK Rate
+		exceeds the return link capacity for the scenario are marked
+		with a star.</t>
 
      		<figure anchor="fig-projected" title="Rate of ACK traffic required to fill the forward path in different loss and asymmetry scenarios">
                	 <artwork align="center"><![CDATA[
@@ -247,14 +263,14 @@ Cases where the ACK Rate exceeds the return link capacity for the scenario are m
                 ]]></artwork>
             </figure>
 
-		</t>
-                <t>
-		Our initial tests show the total number of bytes and packets is reduced 4 times when using
-		an ACK ratio of 1:10, without any increase in loss, on a high-latency link with
-		an asymmetry of 5:1. The following table presents the numbers of packets sent by two QUIC
-		implementations using the default and proposed ACK ratios. We see between a four and five time reduction
-		in the number of packets sent.
-		</t>
+		<t> Our initial tests show the total number of bytes and
+		packets is reduced 4 times when using an ACK ratio of 1:10,
+		without any increase in loss, on a high-latency link with an
+		asymmetry of 5:1. <xref target="fig-packets"></xref> presents a
+		table with the numbers of packets sent by two QUIC
+		implementations using the default and proposed ACK ratios. We
+		see between a four and five time reduction in the number of
+		packets sent.  </t>
 
      		<figure anchor="fig-packets" title="Number of packets sent and received during a 100MB QUIC transfer using different ACK ratios, for two implementations">
                	 <artwork align="center"><![CDATA[
@@ -267,12 +283,12 @@ Cases where the ACK Rate exceeds the return link capacity for the scenario are m
 +----------------------------------+----------------+----------------+
                 ]]></artwork>
             </figure>
-		<t>
-		The following table presents the number of bytes sent by a QUIC implementation
-		using the default and proposed ACK ratios. We see a reduction in in the number of
-		bytes on the return path from 2.7 to 0.7% of the total bytes sent. This number is
-		sufficient to allow the path to take full advantage of the forward rate.
-		</t>
+		<t> <xref target="fig-bytes"></xref> presents a table with the
+		number of bytes sent by a QUIC implementation using the default
+		and proposed ACK ratios. We see a reduction in in the number of
+		bytes on the return path from 2.7 to 0.7% of the total bytes
+		sent. This number is sufficient to allow the path to take full
+		advantage of the forward rate.  </t>
 
      		<figure anchor="fig-bytes" title="Number of bytes sent and received during a 100MB Chromium QUIC transfer using different ACK ratios">
                	 <artwork align="center"><![CDATA[
@@ -287,16 +303,16 @@ Cases where the ACK Rate exceeds the return link capacity for the scenario are m
             </figure>
 
 
-		<t>
-		The presented results have been confirmed by Google, who use
-		their own ACK ratio heuristics.  Although the QUIC specification recommends
-		sending an ACK for every other received packet, the currently used algorithm in
+		<t> The presented results have been confirmed by Google, who
+		use their own ACK ratio heuristics XXX needs a ref XXX.
+		Although the QUIC specification recommends sending an ACK for
+		every other received packet, the currently used algorithm in
 		Chromium QUIC is min(max\_ack\_delay, 1/4 * min\_rtt) or 10
-		packets.
-		Their choice of 1:10 was based also on experiments, and agrees with our
-		analysis presented earlier. We understand that google also evaluated 1:20, but
-		in their tested scenarios this did not offer an overall benefit.
-		</t>
+		packets.  Their choice of 1:10 was based also on experiments,
+		and agrees with our analysis presented earlier. We understand
+		that google also evaluated 1:20, but in their tested scenarios
+		this did not offer an overall benefit.  </t>
+
                 <t>
                     <xref target="RFC6928"/>
                 </t>
@@ -305,6 +321,7 @@ Cases where the ACK Rate exceeds the return link capacity for the scenario are m
         <section anchor="IANA" title="IANA Considerations">
             <t>This memo includes no request to IANA.</t>
         </section>
+
         <section anchor="Security" title="Security Considerations">
             <t>All drafts are required to have a security considerations section.
       See <xref target="RFC3552">RFC 3552</xref> for a guide.</t>
@@ -317,22 +334,25 @@ Cases where the ACK Rate exceeds the return link capacity for the scenario are m
 
       &RFC2119;
 
+      &RFC4340;
+
+      &RFC4341;
+
       &RFC5681;
 
-      &RFC2760;
+      &RFC5690;
 
       &I-D.ietf-quic-transport;
 
     </references>
         <references title="Informative References"><!-- Here we use entities that we defined at the beginning. -->
 
-      &RFC2629;
-
-      &RFC3552;
 
       &RFC2525;
 
       &RFC3449;
+
+      &RFC3552;
 
       &RFC6928;
 
